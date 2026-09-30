@@ -199,7 +199,14 @@ lichSu:[]
 let duLieu=localStorage.getItem('HNAGv10_DuLieu')?JSON.parse(localStorage.getItem('HNAGv10_DuLieu')):DU_LIEU_GOC;
 luuDuLieu();
 
-function luuDuLieu(){localStorage.setItem('HNAGv10_DuLieu',JSON.stringify(duLieu));}
+function luuDuLieu(){
+  try {
+    localStorage.setItem('HNAGv10_DuLieu',JSON.stringify(duLieu));
+  } catch (e) {
+    alert('Bộ nhớ trình duyệt đã đầy! Vui lòng chọn ảnh nhỏ hơn hoặc xóa bớt dữ liệu.');
+  }
+}
+
 function layLichSu(){const ls=localStorage.getItem(KHOA_LS)?JSON.parse(localStorage.getItem(KHOA_LS)):[];const now=new Date();return ls.filter(x=>now-new Date(x.ngay)<=SO_NGAY_GIU*24*60*60*1000);}
 function luuLichSu(mangMon){let ls=layLichSu();ls.unshift({ngay:new Date().toISOString(),mon:mangMon});localStorage.setItem(KHOA_LS,JSON.stringify(ls));}
 
@@ -268,12 +275,40 @@ function luuLichSuVaVe(loai){
   openScr('scrHome');
 }
 
-function docFileAnh(file){
+// Hàm thu nhỏ và nén ảnh tự động để tránh tràn bộ nhớ localStorage
+function nenFileAnh(file, maxWidth = 300, maxHeight = 300, quality = 0.7){
   return new Promise((resolve)=>{
     if(!file){resolve("");return;}
-    const reader=new FileReader();
-    reader.onload=(e)=>resolve(e.target.result);
-    reader.onerror=()=>resolve("");
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve("");
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve("");
     reader.readAsDataURL(file);
   });
 }
@@ -325,7 +360,7 @@ async function themMon(k){
 
   let anhData="";
   if(inputImg && inputImg.files && inputImg.files[0]){
-    anhData = await docFileAnh(inputImg.files[0]);
+    anhData = await nenFileAnh(inputImg.files[0]);
   }
 
   duLieu[k].push({ten:t, anh:anhData});
@@ -360,7 +395,7 @@ function moSuaMon(k, i){
 
 async function capNhatAnhEdit(input, k, i){
   if(input.files && input.files[0]){
-    const base64 = await docFileAnh(input.files[0]);
+    const base64 = await nenFileAnh(input.files[0]);
     editTempImg[`${k}-${i}`] = base64;
 
     const prevWrap = document.getElementById(`edit-prev-wrap-${k}-${i}`);
