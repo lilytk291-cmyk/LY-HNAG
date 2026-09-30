@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Cấu hình PWA & Hiển thị App với Biểu tượng Bát Cơm Bốc Khói -->
+<meta name="theme-color" content="#A66028">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Hôm Nay Ăn Gì">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8' fill='none' stroke='%23A66028' stroke-width='5' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z' fill='%23FFF9F0' stroke='%23502E14' stroke-width='4'/%3E%3Cpath d='M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z' fill='%23A66028' stroke='%23502E14' stroke-width='5'/%3E%3Cpath d='M38,84 L36,92 C36,94 64,94 64,92 L62,84' fill='%23A66028' stroke='%23502E14' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8' fill='none' stroke='%23A66028' stroke-width='5' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z' fill='%23FFF9F0' stroke='%23502E14' stroke-width='4'/%3E%3Cpath d='M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z' fill='%23A66028' stroke='%23502E14' stroke-width='5'/%3E%3Cpath d='M38,84 L36,92 C36,94 64,94 64,92 L62,84' fill='%23A66028' stroke='%23502E14' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Hôm Nay Ăn Gì","short_name":"Ăn Gì","start_url":".","display":"standalone","background_color":"%23FFF6EB","theme_color":"%23A66028","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Cpath d=%22M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8%22 fill=%22none%22 stroke=%22%23A66028%22 stroke-width=%225%22 stroke-linecap=%22round%22 opacity=%220.85%22/%3E%3Cpath d=%22M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z%22 fill=%22%23FFF9F0%22 stroke=%22%23502E14%22 stroke-width=%224%22/%3E%3Cpath d=%22M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z%22 fill=%22%23A66028%22 stroke=%22%23502E14%22 stroke-width=%225%22/%3E%3Cpath d=%22M38,84 L36,92 C36,94 64,94 64,92 L62,84%22 fill=%22%23A66028%22 stroke=%22%23502E14%22 stroke-width=%224%22/%3E%3C/svg%3E","sizes":"192x192 512x512","type":"image/svg+xml"}]}'>
+
+<title>Hôm Nay Ăn Gì</title>
+<style>
+:root{
+  --bg-main:#FFF6EB; --bg-card:#FFFAF4; --accent:#A66028; --accent-dark:#7A421A;
+  --text-main:#502E14; --text-strong:#3D220F; --text-light:#90653F;
+  --border:#E0C197; --radius:18px; --img-size:120px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;user-select:none;}
+body{
+  background-color:var(--bg-main);
+  background-image:url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C8935A' fill-opacity='0.07'%3E%3Cpath d='M70 60 L48 48 L48 72 Z M70 60 L92 48 L92 72 Z'/%3E%3Crect x='66' y='55' width='8' height='10' rx='2'/%3E%3Cpath d='M25 105 L10 97 L10 113 Z M25 105 L40 97 L40 113 Z'/%3E%3Crect x='23' y='101' width='4' height='6' rx='1'/%3E%3Cpath d='M115 25 L102 18 L102 32 Z M115 25 L128 18 L128 32 Z'/%3E%3Crect x='113' y='21' width='4' height='6' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+  color:var(--text-main); font-size:16px; padding:0;
+}
+.container{width:100%;max-width:520px;margin:0 auto;padding:16px;}
+.home-btn{position:fixed;top:14px;left:14px;z-index:999;width:42px;height:42px;border-radius:50%;border:2px solid var(--border);background:rgba(255,250,244,0.95);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:var(--accent);}
+header{text-align:center;padding:42px 0 18px;}
+h1{font-size:26px;color:var(--accent-dark);font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;}
+.app-header-icon{width:36px;height:36px;}
+.date{font-size:15px;color:var(--text-light);margin-top:6px;font-weight:500;}
+.screen{display:none;animation:fade .3s ease;width:100%;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.main-btns{display:flex;flex-direction:column;gap:14px;margin-top:16px;max-width:360px;margin-left:auto;margin-right:auto;}
+.big-btn{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:18px 20px;text-align:center;cursor:pointer;transition:.2s;}
+.big-btn:active{transform:scale(.97);}
+.big-btn .icon{font-size:36px;margin-bottom:6px;}
+.big-btn .text{font-size:18px;font-weight:700;color:var(--text-strong);}
+.lottery-wrap{margin-top:10px;padding:6px;max-width:480px;margin-left:auto;margin-right:auto;}
+.lottery-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;}
+.lottery-box{background:var(--bg-card);border:3px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;}
+.lottery-title{font-size:17px;color:var(--accent-dark);font-weight:700;margin-bottom:10px;}
+.food-show{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.food-circle{width:var(--img-size);height:var(--img-size);border-radius:50%;border:3px solid var(--accent);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;}
+.food-circle img{width:100%;height:100%;object-fit:cover;}
+.food-circle .no-img{width:60%;height:60%;display:flex;align-items:center;justify-content:center;}
+.food-label{background:var(--bg-main);border:2px solid var(--border);border-radius:12px;padding:8px 12px;width:100%;font-size:16px;font-weight:700;color:var(--text-strong);min-height:54px;display:flex;align-items:center;justify-content:center;text-align:center;}
+.spinning .food-label,.spinning .food-circle{animation:pulse .12s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.btn-spin{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border:none;border-radius:var(--radius);font-size:19px;font-weight:800;cursor:pointer;}
+.btn-spin:disabled{opacity:.7;}
+.result-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px;max-width:420px;margin:0 auto;}
+.result-title{font-size:24px;font-weight:800;color:var(--accent-dark);}
+.result-item{width:100%;padding:18px;background:var(--bg-card);border:3px solid var(--border);border-radius:var(--radius);text-align:center;}
+.result-item .food-circle{width:140px;height:140px;border-width:4px;margin:12px auto;}
+.result-item .food-label{font-size:18px;min-height:60px;}
+.btn-back{padding:12px 24px;border:2px solid var(--border);background:transparent;border-radius:var(--radius);font-size:16px;font-weight:700;color:var(--text-strong);cursor:pointer;margin-top:6px;}
+.btn-confirm-res{padding:12px 24px;border:none;background:#D4E9D0;border-radius:var(--radius);font-size:16px;font-weight:700;color:#255022;cursor:pointer;margin-top:6px;}
+.group-list{margin-top:16px;display:flex;flex-direction:column;gap:10px;max-width:440px;margin:0 auto;}
+.group-card{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:14px;}
+.group-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:17px;cursor:pointer;color:var(--text-strong);}
+.group-body{display:none;margin-top:12px;padding-top:10px;border-top:2px dashed var(--border);}
+.group-body.open{display:block;}
+.food-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(166,96,40,.06);border-radius:10px;margin-bottom:8px;}
+.food-thumb{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;}
+.food-thumb.no-pic{font-size:18px;line-height:42px;text-align:center;}
+.food-name{flex:1;font-size:16px;font-weight:600;color:var(--text-strong);word-break:break-word;}
+.btn-edit{padding:6px 10px;background:#EBF3FA;color:#2A6496;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-del{padding:6px 10px;background:#F4D7D0;color:#923C28;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+.add-form{margin-top:12px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,0.6);padding:10px;border-radius:12px;border:1px dashed var(--border);}
+.add-form input[type="text"]{padding:10px;border:2px solid var(--border);border-radius:10px;font-size:15px;background:#fff;}
+.btn-file-lbl{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;background:#fff;border:2px dashed var(--border);border-radius:10px;font-size:14px;font-weight:600;color:var(--text-main);cursor:pointer;transition:.2s;}
+.btn-file-lbl:active{background:rgba(166,96,40,.1);}
+.btn-add{padding:10px;background:#D4E9D0;color:#255022;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;}
+.btn-add:active{transform:scale(.97);}
+
+/* CSS Chỉnh sửa món */
+.edit-form-wrap{width:100%;display:flex;flex-direction:column;gap:10px;background:#fff;padding:12px;border-radius:12px;border:2px solid var(--accent);}
+.edit-input-text{padding:8px 10px;border:2px solid var(--border);border-radius:8px;font-size:15px;width:100%;}
+.edit-img-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.edit-btn-group{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+
+.empty{text-align:center;padding:16px;color:var(--text-light);font-style:italic;font-size:15px;}
+.history-item{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.history-date{font-weight:700;color:var(--accent-dark);margin-bottom:8px;font-size:17px;}
+.history-foods{margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:15px;}
+</style>
+</head>
+<body>
+<div class="container">
+<button class="home-btn" id="homeBtn" style="display:none;" onclick="openScr('scrHome')">🏠</button>
+<div class="screen active" id="scrHome">
+  <header>
+    <h1>
+      <svg class="app-header-icon" viewBox="0 0 100 100"><path d="M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8" fill="none" stroke="#A66028" stroke-width="5" stroke-linecap="round" opacity="0.85"/><path d="M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z" fill="#FFF9F0" stroke="#502E14" stroke-width="4"/><path d="M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z" fill="#A66028" stroke="#502E14" stroke-width="5"/><path d="M38,84 L36,92 C36,94 64,94 64,92 L62,84" fill="#A66028" stroke="#502E14" stroke-width="4"/></svg>
+      Hôm Nay Ăn Gì
+    </h1>
+    <div class="date" id="dateShow"></div>
+  </header>
+  <div class="main-btns">
+    <div class="big-btn" onclick="openScr('scrDaily')"><div class="icon">🍱</div><div class="text">Chọn món hằng ngày</div></div>
+    <div class="big-btn" onclick="openScr('scrSpecial')"><div class="icon">✨</div><div class="text">Chọn món đặc biệt</div></div>
+    <div class="big-btn" onclick="openScr('scrManage')"><div class="icon">📝</div><div class="text">Quản lý danh sách món</div></div>
+    <div class="big-btn" onclick="openScr('scrHistory')"><div class="icon">📅</div><div class="text">Lịch sử món ăn</div></div>
+  </div>
+</div>
+<div class="screen" id="scrDaily">
+  <header><h1>🍱 Chọn món hằng ngày</h1></header>
+  <div class="lottery-wrap">
+    <div class="lottery-grid">
+      <div class="lottery-box" data-gr="man"><div class="lottery-title">🥩 Món mặn</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+      <div class="lottery-box" data-gr="rau"><div class="lottery-title">🥬 Món rau</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+      <div class="lottery-box" data-gr="canh"><div class="lottery-title">🥣 Món canh</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+      <div class="lottery-box" data-gr="kem"><div class="lottery-title">🍚 Đồ ăn kèm</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+    </div>
+    <button class="btn-spin" id="btnDaily" onclick="quayNgay('daily')">🎲 Bắt đầu quay</button>
+  </div>
+</div>
+<div class="screen" id="scrSpecial">
+  <header><h1>✨ Chọn món đặc biệt</h1></header>
+  <div class="lottery-wrap">
+    <div class="lottery-grid">
+      <div class="lottery-box" data-gr="dacbiet"><div class="lottery-title">🌟 Món đặc biệt</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+    </div>
+    <button class="btn-spin" id="btnSpecial" onclick="quayNgay('special')">🎲 Bắt đầu quay</button>
+  </div>
+</div>
+<div class="screen" id="scrManage"><header><h1>📝 Quản lý danh sách món</h1></header><div class="group-list" id="groupList"></div></div>
+<div class="screen" id="scrResDaily"><div class="result-wrap"><div class="result-title">🎉 Bữa ăn hôm nay</div><div id="resDailyList"></div><button class="btn-confirm-res" onclick="luuLichSuVaVe('daily')">✅ Đồng ý & Lưu lịch sử</button><button class="btn-back" onclick="openScr('scrHome')">Quay lại</button></div></div>
+<div class="screen" id="scrResSpecial"><div class="result-wrap"><div class="result-title">🌟 Món đặc biệt</div><div id="resSpecialItem"></div><button class="btn-confirm-res" onclick="luuLichSuVaVe('special')">✅ Đồng ý & Lưu lịch sử</button><button class="btn-back" onclick="openScr('scrHome')">Quay lại</button></div></div>
+<div class="screen" id="scrHistory"><header><h1>📅 Lịch sử món ăn (15 ngày gần nhất)</h1></header><div id="historyContent"></div><button class="btn-back" onclick="openScr('scrHome')">Quay lại</button></div>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('activate', e => self.clients.claim());
+      self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+  });
+}
+
+const BOWL_SVG = `<svg class="no-img" viewBox="0 0 100 100"><path d="M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8" fill="none" stroke="#A66028" stroke-width="5" stroke-linecap="round" opacity="0.85"/><path d="M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z" fill="#FFF9F0" stroke="#502E14" stroke-width="4"/><path d="M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z" fill="#A66028" stroke="#502E14" stroke-width="5"/><path d="M38,84 L36,92 C36,94 64,94 64,92 L62,84" fill="#A66028" stroke="#502E14" stroke-width="4"/></svg>`;
+
+const NHOM={man:{ten:"Món mặn",icon:"🥩"},rau:{ten:"Món rau",icon:"🥬"},canh:{ten:"Món canh",icon:"🥣"},kem:{ten:"Đồ ăn kèm",icon:"🍚"},dacbiet:{ten:"Món đặc biệt",icon:"🌟"}};
+const KHOA_LS='HNAGv10_LichSu';
+const SO_NGAY_GIU=15;
+let ketQuaHienTai=null;
+let editTempImg={};
+
+const DU_LIEU_GOC={
+man:[
+{ten:"Thịt luộc",anh:""},{ten:"Thịt Kho",anh:""},{ten:"Thịt nướng",anh:""},{ten:"Thịt rang",anh:""},
+{ten:"Sườn xào chua ngọt",anh:""},{ten:"Thịt sốt cà chua",anh:""},{ten:"Chả xương sông/ Chả lá lốt",anh:""},
+{ten:"Thịt băm xào rau củ",anh:""},{ten:"Tôm thịt kho quẹt",anh:""},{ten:"Tôm hấp",anh:""},{ten:"Tôm chiên",anh:""},
+{ten:"Cá rán",anh:""},{ten:"Cá Kho",anh:""},{ten:"Gà rán",anh:""},{ten:"Gà xào",anh:""},{ten:"Gà luộc",anh:""},
+{ten:"Gà trộn",anh:""},{ten:"Cá hấp",anh:""},{ten:"Trứng rán",anh:""},{ten:"Tôm rang",anh:""},
+{ten:"Bò xào rau củ",anh:""},{ten:"Bò kho",anh:""},{ten:"Ngan vịt quay/ nướng",anh:""},{ten:"Giò chả các loại",anh:""},
+{ten:"Sườn nướng",anh:""},{ten:"Mực xào",anh:""},{ten:"Mực hấp",anh:""},{ten:"Gà kho gừng",anh:""},
+{ten:"Nem rán",anh:""},{ten:"Gan xào",anh:""}
+],
+rau:[
+{ten:"Rau muống xào",anh:""},{ten:"Rau muống luộc",anh:""},{ten:"Rau lang xào",anh:""},{ten:"Rau lang luộc",anh:""},
+{ten:"Bắp cải xào",anh:""},{ten:"Bắp cải luộc",anh:""},{ten:"Rau củ luộc thập cẩm",anh:""},{ten:"Rau dền luộc",anh:""},
+{ten:"Hoa lơ xào thập cẩm",anh:""},{ten:"Nấm kho",anh:""},{ten:"Nấm xào",anh:""},{ten:"Bí xanh xào",anh:""},
+{ten:"Bí xanh luộc",anh:""},{ten:"Đỗ xào",anh:""},{ten:"Giá xào",anh:""},{ten:"Giá luộc",anh:""},
+{ten:"Bí đỏ xào",anh:""},{ten:"Bí đỏ luộc",anh:""},{ten:"Rau cải xào",anh:""},{ten:"Rau cải luộc",anh:""},
+{ten:"Salad",anh:""},{ten:"Mướp đắng xào",anh:""}
+],
+canh:[
+{ten:"Canh cá",anh:""},{ten:"Canh chua sườn/ thịt",anh:""},{ten:"Canh rau ngót nấu thịt",anh:""},
+{ten:"Canh rong biển",anh:""},{ten:"Canh rau cải",anh:""},{ten:"Canh rau dền",anh:""},
+{ten:"Canh bí nấu tôm",anh:""},{ten:"Canh bí nấu cua",anh:""},{ten:"Canh cua mướp mồng tơi",anh:""},
+{ten:"Canh riêu cua",anh:""},{ten:"Canh cua nấu rau",anh:""},{ten:"Canh khoai",anh:""},{ten:"Canh cà bung",anh:""},
+{ten:"Canh ốc chuối đậu",anh:""},{ten:"Canh măng",anh:""},{ten:"Canh mướp đắng nhồi thịt",anh:""},{ten:"Canh củ cải nấu sườn",anh:""}
+],
+kem:[
+{ten:"Đậu rán",anh:""},{ten:"Đậu tẩm hành",anh:""},{ten:"Đậu sốt cà chua",anh:""},{ten:"Đậu rim hành",anh:""},
+{ten:"Lạc rang",anh:""},{ten:"Đậu luộc",anh:""},{ten:"Khoai chiên",anh:""},{ten:"Dưa muối",anh:""},
+{ten:"Kimchi",anh:""},{ten:"Nem thính",anh:""},{ten:"Lạp xưởng",anh:""}
+],
+dacbiet:[
+{ten:"Bún đậu mắm tôm",anh:""},{ten:"Bò sốt vang",anh:""},{ten:"Món cuốn",anh:""},{ten:"Bít tết",anh:""},
+{ten:"Bún chả",anh:""},{ten:"Bún bò Nam Bộ",anh:""},{ten:"Mì tôm",anh:""},{ten:"Cơm rang",anh:""},
+{ten:"Mì xào",anh:""},{ten:"Phở bò/ gà",anh:""},{ten:"Bún riêu cua",anh:""},{ten:"Lẩu các loại",anh:""},
+{ten:"Nướng",anh:""},{ten:"Cháo",anh:""}
+],
+lichSu:[]
+};
+
+let duLieu=localStorage.getItem('HNAGv10_DuLieu')?JSON.parse(localStorage.getItem('HNAGv10_DuLieu')):DU_LIEU_GOC;
+luuDuLieu();
+
+function luuDuLieu(){localStorage.setItem('HNAGv10_DuLieu',JSON.stringify(duLieu));}
+function layLichSu(){const ls=localStorage.getItem(KHOA_LS)?JSON.parse(localStorage.getItem(KHOA_LS)):[];const now=new Date();return ls.filter(x=>now-new Date(x.ngay)<=SO_NGAY_GIU*24*60*60*1000);}
+function luuLichSu(mangMon){let ls=layLichSu();ls.unshift({ngay:new Date().toISOString(),mon:mangMon});localStorage.setItem(KHOA_LS,JSON.stringify(ls));}
+
+function openScr(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('homeBtn').style.display=id==='scrHome'?'none':'block';
+  if(id==='scrManage')renderManage();
+  if(id==='scrHistory')renderHistory();
+  capNhatNgay();
+}
+function capNhatNgay(){document.getElementById('dateShow').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+
+async function quayNgay(loai){
+  let cacBoxes,kq={};
+  if(loai==='daily'){
+    cacBoxes=document.querySelectorAll('#scrDaily .lottery-box');
+    for(let b of cacBoxes){
+      const gr=b.dataset.gr;
+      if(duLieu[gr].length===0){alert(`Nhóm ${NHOM[gr].ten} chưa có món!`);return;}
+    }
+  }else{
+    cacBoxes=document.querySelectorAll('#scrSpecial .lottery-box');
+    if(duLieu.dacbiet.length===0){alert('Nhóm món đặc biệt chưa có món!');return;}
+  }
+  document.getElementById('btnDaily').disabled=true;
+  document.getElementById('btnSpecial').disabled=true;
+  for(let box of cacBoxes){
+    const gr=box.dataset.gr;
+    const fc=box.querySelector('.food-circle'), fl=box.querySelector('.food-label');
+    box.classList.add('spinning');
+    for(let i=0;i<15;i++){
+      const ngau=duLieu[gr][Math.floor(Math.random()*duLieu[gr].length)];
+      fc.innerHTML=ngau.anh?`<img src="${ngau.anh}">`:BOWL_SVG;
+      fl.textContent=ngau.ten;
+      await new Promise(r=>setTimeout(r,100));
+    }
+    const chon=duLieu[gr][Math.floor(Math.random()*duLieu[gr].length)];
+    kq[gr]=chon;
+    fc.innerHTML=chon.anh?`<img src="${chon.anh}">`:BOWL_SVG;
+    fl.textContent=chon.ten;
+    box.classList.remove('spinning');
+  }
+  ketQuaHienTai={loai,kq};
+  if(loai==='daily'){
+    let html='';
+    Object.entries(kq).forEach(([g,m])=>{
+      html+=`<div class="result-item"><div class="lottery-title">${NHOM[g].icon} ${NHOM[g].ten}</div><div class="food-show"><div class="food-circle">${m.anh?`<img src="${m.anh}">`:BOWL_SVG}</div><div class="food-label">${m.ten}</div></div></div>`;
+    });
+    document.getElementById('resDailyList').innerHTML=html;
+    openScr('scrResDaily');
+  }else{
+    const m=kq.dacbiet;
+    document.getElementById('resSpecialItem').innerHTML=`<div class="result-item"><div class="lottery-title">${NHOM.dacbiet.icon} ${NHOM.dacbiet.ten}</div><div class="food-show"><div class="food-circle">${m.anh?`<img src="${m.anh}">`:BOWL_SVG}</div><div class="food-label">${m.ten}</div></div></div>`;
+    openScr('scrResSpecial');
+  }
+  document.getElementById('btnDaily').disabled=false;
+  document.getElementById('btnSpecial').disabled=false;
+}
+
+function luuLichSuVaVe(loai){
+  if(!ketQuaHienTai)return;
+  let mangMon=Object.values(ketQuaHienTai.kq).map(m=>m.ten);
+  luuLichSu(mangMon);
+  alert('✅ Đã lưu vào lịch sử!');
+  openScr('scrHome');
+}
+
+function docFileAnh(file){
+  return new Promise((resolve)=>{
+    if(!file){resolve("");return;}
+    const reader=new FileReader();
+    reader.onload=(e)=>resolve(e.target.result);
+    reader.onerror=()=>resolve("");
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderManage(){
+  const gl=document.getElementById('groupList');gl.innerHTML='';
+  Object.entries(NHOM).forEach(([k,v])=>{
+    const ds=duLieu[k];
+    gl.innerHTML+=`<div class="group-card">
+      <div class="group-head" onclick="this.nextElementSibling.classList.toggle('open')">${v.icon} ${v.ten} (${ds.length}) <span>▼</span></div>
+      <div class="group-body">
+        ${ds.map((m,i)=>`
+          <div class="food-row" id="row-${k}-${i}">
+            ${m.anh ? `<img class="food-thumb" src="${m.anh}">` : `<div class="food-thumb no-pic">🍚</div>`}
+            <span class="food-name">${m.ten}</span>
+            <button class="btn-edit" onclick="moSuaMon('${k}',${i})">✏️ Sửa</button>
+            <button class="btn-del" onclick="xoaMon('${k}',${i})">Xóa</button>
+          </div>
+        `).join('')}
+        <div class="add-form">
+          <input type="text" id="new-${k}" placeholder="Tên món mới...">
+          <input type="file" id="new-img-${k}" accept="image/*" style="display:none;" onchange="thayDoiNhanAnh(this, '${k}')">
+          <label for="new-img-${k}" class="btn-file-lbl" id="lbl-new-img-${k}">📷 Chọn ảnh (Không bắt buộc)</label>
+          <button class="btn-add" onclick="themMon('${k}')">＋ Thêm món mới</button>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+
+function thayDoiNhanAnh(input, k){
+  const lbl=document.getElementById(`lbl-new-img-${k}`);
+  if(input.files && input.files[0]){
+    lbl.textContent = '✅ Đã chọn ảnh món ăn';
+    lbl.style.borderColor = '#255022';
+    lbl.style.background = '#D4E9D0';
+  }else{
+    lbl.textContent = '📷 Chọn ảnh (Không bắt buộc)';
+    lbl.style.borderColor = 'var(--border)';
+    lbl.style.background = '#fff';
+  }
+}
+
+async function themMon(k){
+  const inputName=document.getElementById(`new-${k}`);
+  const inputImg=document.getElementById(`new-img-${k}`);
+  const t=inputName.value.trim();
+  if(!t){alert('Vui lòng nhập tên món ăn!');return;}
+
+  let anhData="";
+  if(inputImg && inputImg.files && inputImg.files[0]){
+    anhData = await docFileAnh(inputImg.files[0]);
+  }
+
+  duLieu[k].push({ten:t, anh:anhData});
+  luuDuLieu();
+  renderManage();
+}
+
+function moSuaMon(k, i){
+  editTempImg[`${k}-${i}`] = duLieu[k][i].anh || "";
+  const row = document.getElementById(`row-${k}-${i}`);
+  const m = duLieu[k][i];
+  const curImg = editTempImg[`${k}-${i}`];
+
+  row.innerHTML = `
+    <div class="edit-form-wrap">
+      <input type="text" id="edit-name-${k}-${i}" class="edit-input-text" value="${m.ten.replace(/"/g, '&quot;')}" placeholder="Nhập tên món...">
+      <div class="edit-img-row" id="edit-img-row-${k}-${i}">
+        <div id="edit-prev-wrap-${k}-${i}">
+          ${curImg ? `<img class="food-thumb" src="${curImg}">` : `<div class="food-thumb no-pic">🍚</div>`}
+        </div>
+        <input type="file" id="edit-file-${k}-${i}" accept="image/*" style="display:none;" onchange="capNhatAnhEdit(this, '${k}', ${i})">
+        <label for="edit-file-${k}-${i}" class="btn-file-lbl">📷 Thay ảnh</label>
+        ${curImg ? `<button type="button" id="edit-del-btn-${k}-${i}" class="btn-del" style="padding:6px 8px;" onclick="xoaAnhEdit('${k}',${i})">❌ Xóa ảnh</button>` : ''}
+      </div>
+      <div class="edit-btn-group">
+        <button class="btn-add" style="padding:6px 14px;font-size:14px;" onclick="luuSuaMon('${k}', ${i})">💾 Lưu</button>
+        <button class="btn-back" style="padding:6px 14px;font-size:14px;margin:0;" onclick="huySuaMon('${k}', ${i})">Hủy</button>
+      </div>
+    </div>
+  `;
+}
+
+async function capNhatAnhEdit(input, k, i){
+  if(input.files && input.files[0]){
+    const base64 = await docFileAnh(input.files[0]);
+    editTempImg[`${k}-${i}`] = base64;
+
+    const prevWrap = document.getElementById(`edit-prev-wrap-${k}-${i}`);
+    if(prevWrap){
+      prevWrap.innerHTML = `<img class="food-thumb" src="${base64}">`;
+    }
+
+    let delBtn = document.getElementById(`edit-del-btn-${k}-${i}`);
+    if(!delBtn){
+      const imgRow = document.getElementById(`edit-img-row-${k}-${i}`);
+      delBtn = document.createElement('button');
+      delBtn.id = `edit-del-btn-${k}-${i}`;
+      delBtn.type = 'button';
+      delBtn.className = 'btn-del';
+      delBtn.style.padding = '6px 8px';
+      delBtn.onclick = () => xoaAnhEdit(k, i);
+      delBtn.innerHTML = '❌ Xóa ảnh';
+      imgRow.appendChild(delBtn);
+    }
+  }
+}
+
+function xoaAnhEdit(k, i){
+  editTempImg[`${k}-${i}`] = "";
+  const prevWrap = document.getElementById(`edit-prev-wrap-${k}-${i}`);
+  if(prevWrap){
+    prevWrap.innerHTML = `<div class="food-thumb no-pic">🍚</div>`;
+  }
+  const delBtn = document.getElementById(`edit-del-btn-${k}-${i}`);
+  if(delBtn) delBtn.remove();
+}
+
+function luuSuaMon(k, i){
+  const inputName = document.getElementById(`edit-name-${k}-${i}`);
+  const t = inputName ? inputName.value.trim() : "";
+  if(!t){alert('Tên món không được để trống!');return;}
+
+  duLieu[k][i].ten = t;
+  duLieu[k][i].anh = editTempImg[`${k}-${i}`] || "";
+  delete editTempImg[`${k}-${i}`];
+
+  luuDuLieu();
+  renderManage();
+}
+
+function huySuaMon(k, i){
+  delete editTempImg[`${k}-${i}`];
+  renderManage();
+}
+
+function xoaMon(k,i){if(confirm('Xóa món này?')){duLieu[k].splice(i,1);luuDuLieu();renderManage();}}
+
+function renderHistory(){
+  const hc=document.getElementById('historyContent');
+  const ls=layLichSu();
+  if(ls.length===0){hc.innerHTML='<p class="empty">Chưa có lịch sử nào!</p>';return;}
+  hc.innerHTML=ls.map(x=>{const d=new Date(x.ngay);return`<div class="history-item"><div class="history-date">📅 ${d.toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div><div class="history-foods">${x.mon.map(m=>`<div>• ${m}</div>`).join('')}</div></div>`;}).join('');
+}
+
+capNhatNgay();
+</script>
+</body>
+</html>
