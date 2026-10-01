@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#A66028">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Hôm Nay Ăn Gì">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8' fill='none' stroke='%23A66028' stroke-width='5' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z' fill='%23FFF9F0' stroke='%23502E14' stroke-width='4'/%3E%3Cpath d='M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z' fill='%23A66028' stroke='%23502E14' stroke-width='5'/%3E%3Cpath d='M38,84 L36,92 C36,94 64,94 64,92 L62,84' fill='%23A66028' stroke='%23502E14' stroke-width='4'/%3E%3C/svg%3E">
+<title>Hôm Nay Ăn Gì</title>
+<style>
+:root{
+  --bg-main:#FFF6EB; --bg-card:#FFFAF4; --accent:#A66028; --accent-dark:#7A421A;
+  --text-main:#502E14; --text-strong:#3D220F; --text-light:#90653F;
+  --border:#E0C197; --radius:18px; --img-size:120px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;user-select:none;}
+body{
+  background-color:var(--bg-main);
+  color:var(--text-main); font-size:16px; padding:0;
+}
+.container{width:100%;max-width:520px;margin:0 auto;padding:16px;}
+.home-btn{position:fixed;top:14px;left:14px;z-index:999;width:42px;height:42px;border-radius:50%;border:2px solid var(--border);background:rgba(255,250,244,0.95);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:var(--accent);}
+header{text-align:center;padding:42px 0 18px;}
+h1{font-size:26px;color:var(--accent-dark);font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;}
+.app-header-icon{width:36px;height:36px;}
+.date{font-size:15px;color:var(--text-light);margin-top:6px;font-weight:500;}
+.screen{display:none;animation:fade .3s ease;width:100%;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.main-btns{display:flex;flex-direction:column;gap:14px;margin-top:16px;max-width:360px;margin-left:auto;margin-right:auto;}
+.big-btn{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:18px 20px;text-align:center;cursor:pointer;transition:.2s;}
+.big-btn:active{transform:scale(.97);}
+.big-btn .icon{font-size:36px;margin-bottom:6px;}
+.big-btn .text{font-size:18px;font-weight:700;color:var(--text-strong);}
+.lottery-wrap{margin-top:10px;padding:6px;max-width:480px;margin-left:auto;margin-right:auto;}
+.lottery-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;}
+.lottery-box{background:var(--bg-card);border:3px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;}
+.lottery-title{font-size:17px;color:var(--accent-dark);font-weight:700;margin-bottom:10px;}
+.food-show{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.food-circle{width:var(--img-size);height:var(--img-size);border-radius:50%;border:3px solid var(--accent);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;}
+.food-circle img{width:100%;height:100%;object-fit:cover;}
+.food-circle .no-img{width:60%;height:60%;display:flex;align-items:center;justify-content:center;}
+.food-label{background:var(--bg-main);border:2px solid var(--border);border-radius:12px;padding:8px 12px;width:100%;font-size:16px;font-weight:700;color:var(--text-strong);min-height:54px;display:flex;align-items:center;justify-content:center;text-align:center;}
+.spinning .food-label,.spinning .food-circle{animation:pulse .12s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.btn-spin{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border:none;border-radius:var(--radius);font-size:19px;font-weight:800;cursor:pointer;}
+.btn-spin:disabled{opacity:.7;}
+
+.result-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px;max-width:480px;margin:0 auto;}
+.result-title{font-size:24px;font-weight:800;color:var(--accent-dark);text-align:center;}
+.result-grid-2x2{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;width:100%;}
+.res-card{background:var(--bg-card);border:3px solid var(--border);border-radius:var(--radius);padding:12px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:space-between;}
+.res-card .food-circle{width:110px;height:110px;border-width:3px;margin:8px auto;}
+.res-card .food-label{font-size:15px;min-height:50px;padding:6px 8px;}
+
+.btn-back{padding:12px 24px;border:2px solid var(--border);background:transparent;border-radius:var(--radius);font-size:16px;font-weight:700;color:var(--text-strong);cursor:pointer;margin-top:4px;}
+.btn-confirm-res{padding:12px 24px;border:none;background:#D4E9D0;border-radius:var(--radius);font-size:16px;font-weight:700;color:#255022;cursor:pointer;margin-top:4px;}
+
+.group-list{margin-top:16px;display:flex;flex-direction:column;gap:10px;max-width:440px;margin:0 auto;}
+.group-card{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:14px;}
+.group-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:17px;cursor:pointer;color:var(--text-strong);}
+.group-body{display:none;margin-top:12px;padding-top:10px;border-top:2px dashed var(--border);}
+.group-body.open{display:block;}
+.food-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(166,96,40,.06);border-radius:10px;margin-bottom:8px;}
+.food-thumb{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;}
+.food-thumb.no-pic{font-size:18px;line-height:42px;text-align:center;}
+.food-name{flex:1;font-size:16px;font-weight:600;color:var(--text-strong);word-break:break-word;}
+.empty{text-align:center;padding:16px;color:var(--text-light);font-style:italic;font-size:15px;}
+.history-item{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.history-date{font-weight:700;color:var(--accent-dark);margin-bottom:8px;font-size:17px;}
+.history-foods{margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:15px;}
+</style>
+</head>
+<body>
+<div class="container">
+<button class="home-btn" id="homeBtn" style="display:none;" onclick="openScr('scrHome')">🏠</button>
+<div class="screen active" id="scrHome">
+  <header>
+    <h1>
+      <svg class="app-header-icon" viewBox="0 0 100 100"><path d="M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8" fill="none" stroke="#A66028" stroke-width="5" stroke-linecap="round" opacity="0.85"/><path d="M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z" fill="#FFF9F0" stroke="#502E14" stroke-width="4"/><path d="M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z" fill="#A66028" stroke="#502E14" stroke-width="5"/><path d="M38,84 L36,92 C36,94 64,94 64,92 L62,84" fill="#A66028" stroke="#502E14" stroke-width="4"/></svg>
+      Hôm Nay Ăn Gì
+    </h1>
+    <div class="date" id="dateShow"></div>
+  </header>
+  <div class="main-btns">
+    <div class="big-btn" onclick="openScr('scrDaily')"><div class="icon">🍱</div><div class="text">Chọn món hằng ngày</div></div>
+    <div class="big-btn" onclick="openScr('scrSpecial')"><div class="icon">✨</div><div class="text">Chọn món đặc biệt</div></div>
+    <div class="big-btn" onclick="openScr('scrManage')"><div class="icon">📝</div><div class="text">Quản lý danh sách món</div></div>
+    <div class="big-btn" onclick="openScr('scrHistory')"><div class="icon">📅</div><div class="text">Lịch sử món ăn</div></div>
+  </div>
+</div>
+<div class="screen" id="scrDaily">
+  <header><h1>🍱 Chọn món hằng ngày</h1></header>
+  <div class="lottery-wrap">
+    <div class="lottery-grid">
+      <div class="lottery-box" data-gr="man"><div class="lottery-title">🥩 Món mặn</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+      <div class="lottery-box" data-gr="rau"><div class="lottery-title">🥬 Món rau</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+      <div class="lottery-box" data-gr="canh"><div class="lottery-title">🥣 Món canh</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+      <div class="lottery-box" data-gr="kem"><div class="lottery-title">🍚 Đồ ăn kèm</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+    </div>
+    <button class="btn-spin" id="btnDaily" onclick="quayNgay('daily')">🎲 Bắt đầu quay</button>
+  </div>
+</div>
+<div class="screen" id="scrSpecial">
+  <header><h1>✨ Chọn món đặc biệt</h1></header>
+  <div class="lottery-wrap">
+    <div class="lottery-grid">
+      <div class="lottery-box" data-gr="dacbiet"><div class="lottery-title">🌟 Món đặc biệt</div><div class="food-show"><div class="food-circle"><span class="no-img">❓</span></div><div class="food-label">Chờ quay...</div></div></div>
+    </div>
+    <button class="btn-spin" id="btnSpecial" onclick="quayNgay('special')">🎲 Bắt đầu quay</button>
+  </div>
+</div>
+<div class="screen" id="scrManage"><header><h1>📝 Quản lý danh sách món</h1></header><div class="group-list" id="groupList"></div></div>
+<div class="screen" id="scrResDaily">
+  <div class="result-wrap">
+    <div class="result-title">🎉 Bữa ăn hôm nay</div>
+    <div class="result-grid-2x2" id="resDailyList"></div>
+    <button class="btn-confirm-res" onclick="luuLichSuVaVe('daily')">✅ Đồng ý & Lưu lịch sử</button>
+    <button class="btn-back" onclick="openScr('scrHome')">Quay lại</button>
+  </div>
+</div>
+<div class="screen" id="scrResSpecial">
+  <div class="result-wrap">
+    <div class="result-title">🌟 Món đặc biệt</div>
+    <div id="resSpecialItem" style="width:100%;max-width:260px;margin:0 auto;"></div>
+    <button class="btn-confirm-res" onclick="luuLichSuVaVe('special')">✅ Đồng ý & Lưu lịch sử</button>
+    <button class="btn-back" onclick="openScr('scrHome')">Quay lại</button>
+  </div>
+</div>
+<div class="screen" id="scrHistory"><header><h1>📅 Lịch sử món ăn (15 ngày gần nhất)</h1></header><div id="historyContent"></div><button class="btn-back" onclick="openScr('scrHome')">Quay lại</button></div>
+</div>
+
+<script>
+const BOWL_SVG = `<svg class="no-img" viewBox="0 0 100 100"><path d="M35,28 Q30,18 36,8 M50,25 Q45,15 51,5 M65,28 Q60,18 66,8" fill="none" stroke="#A66028" stroke-width="5" stroke-linecap="round" opacity="0.85"/><path d="M22,48 C20,30 35,24 50,24 C65,24 80,30 78,48 Z" fill="#FFF9F0" stroke="#502E14" stroke-width="4"/><path d="M18,46 C20,72 32,84 50,84 C68,84 80,72 82,46 Z" fill="#A66028" stroke="#502E14" stroke-width="5"/><path d="M38,84 L36,92 C36,94 64,94 64,92 L62,84" fill="#A66028" stroke="#502E14" stroke-width="4"/></svg>`;
+
+const NHOM={man:{ten:"Món mặn",icon:"🥩"},rau:{ten:"Món rau",icon:"🥬"},canh:{ten:"Món canh",icon:"🥣"},kem:{ten:"Đồ ăn kèm",icon:"🍚"},dacbiet:{ten:"Món đặc biệt",icon:"🌟"}};
+const KHOA_LS='HNAGv10_LichSu';
+const SO_NGAY_GIU=15;
+let ketQuaHienTai=null;
+
+let duLieu = { man:[], rau:[], canh:[], kem:[], dacbiet:[] };
+
+async function taiDuLieuTuGoogleSheets() {
+  try {
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwg66ZvYGAClQ2WI4AkbAlDmHsq18TUN_9UxqpLipnGCqdW0ABit7e_2E8EBZk3BOQaUg/exec';
+    const response = await fetch(scriptUrl + '?t=' + new Date().getTime());
+    if (!response.ok) return;
+    const data = await response.json();
+    if (data) {
+      duLieu = data;
+    }
+  } catch (e) {
+    console.log('Không tải được dữ liệu từ Apps Script.');
+  }
+}
+
+function layLichSu(){const ls=localStorage.getItem(KHOA_LS)?JSON.parse(localStorage.getItem(KHOA_LS)):[];const now=new Date();return ls.filter(x=>now-new Date(x.ngay)<=SO_NGAY_GIU*24*60*60*1000);}
+function luuLichSu(mangMon){let ls=layLichSu();ls.unshift({ngay:new Date().toISOString(),mon:mangMon});localStorage.setItem(KHOA_LS,JSON.stringify(ls));}
+
+async function openScr(id){
+  await taiDuLieuTuGoogleSheets();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('homeBtn').style.display=id==='scrHome'?'none':'block';
+  if(id==='scrManage')renderManage();
+  if(id==='scrHistory')renderHistory();
+  capNhatNgay();
+}
+function capNhatNgay(){document.getElementById('dateShow').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+
+async function quayNgay(loai){
+  await taiDuLieuTuGoogleSheets();
+  let cacBoxes,kq={};
+  if(loai==='daily'){
+    cacBoxes=document.querySelectorAll('#scrDaily .lottery-box');
+    for(let b of cacBoxes){
+      const gr=b.dataset.gr;
+      if(!duLieu[gr] || duLieu[gr].length===0){alert(`Nhóm ${NHOM[gr].ten} chưa có món!`);return;}
+    }
+  }else{
+    cacBoxes=document.querySelectorAll('#scrSpecial .lottery-box');
+    if(!duLieu.dacbiet || duLieu.dacbiet.length===0){alert('Nhóm món đặc biệt chưa có món!');return;}
+  }
+  document.getElementById('btnDaily').disabled=true;
+  document.getElementById('btnSpecial').disabled=true;
+  for(let box of cacBoxes){
+    const gr=box.dataset.gr;
+    const fc=box.querySelector('.food-circle'), fl=box.querySelector('.food-label');
+    box.classList.add('spinning');
+    for(let i=0;i<15;i++){
+      const ngau=duLieu[gr][Math.floor(Math.random()*duLieu[gr].length)];
+      fc.innerHTML=ngau.anh?`<img src="${ngau.anh}">`:BOWL_SVG;
+      fl.textContent=ngau.ten;
+      await new Promise(r=>setTimeout(r,100));
+    }
+    const chon=duLieu[gr][Math.floor(Math.random()*duLieu[gr].length)];
+    kq[gr]=chon;
+    fc.innerHTML=chon.anh?`<img src="${chon.anh}">`:BOWL_SVG;
+    fl.textContent=chon.ten;
+    box.classList.remove('spinning');
+  }
+  ketQuaHienTai={loai,kq};
+  if(loai==='daily'){
+    let html='';
+    Object.entries(kq).forEach(([g,m])=>{
+      html+=`<div class="res-card"><div class="lottery-title">${NHOM[g].icon} ${NHOM[g].ten}</div><div class="food-show"><div class="food-circle">${m.anh?`<img src="${m.anh}">`:BOWL_SVG}</div><div class="food-label">${m.ten}</div></div></div>`;
+    });
+    document.getElementById('resDailyList').innerHTML=html;
+    openScr('scrResDaily');
+  }else{
+    const m=kq.dacbiet;
+    document.getElementById('resSpecialItem').innerHTML=`<div class="res-card"><div class="lottery-title">${NHOM.dacbiet.icon} ${NHOM.dacbiet.ten}</div><div class="food-show"><div class="food-circle">${m.anh?`<img src="${m.anh}">`:BOWL_SVG}</div><div class="food-label">${m.ten}</div></div></div>`;
+    openScr('scrResSpecial');
+  }
+  document.getElementById('btnDaily').disabled=false;
+  document.getElementById('btnSpecial').disabled=false;
+}
+
+function luuLichSuVaVe(loai){
+  if(!ketQuaHienTai)return;
+  let mangMon=Object.values(ketQuaHienTai.kq).map(m=>m.ten);
+  luuLichSu(mangMon);
+  alert('✅ Đã lưu vào lịch sử!');
+  openScr('scrHome');
+}
+
+function renderManage(){
+  const gl=document.getElementById('groupList');gl.innerHTML='';
+  Object.entries(NHOM).forEach(([k,v])=>{
+    const ds=duLieu[k] || [];
+    gl.innerHTML+=`<div class="group-card">
+      <div class="group-head" onclick="this.nextElementSibling.classList.toggle('open')">${v.icon} ${v.ten} (${ds.length}) <span>▼</span></div>
+      <div class="group-body">
+        ${ds.length === 0 ? `<p class="empty">Chưa có món nào</p>` : ds.map((m,i)=>`
+          <div class="food-row" id="row-${k}-${i}">
+            ${m.anh ? `<img class="food-thumb" src="${m.anh}">` : `<div class="food-thumb no-pic">🍚</div>`}
+            <span class="food-name">${m.ten}</span>
+            <span style="font-size:12px;color:var(--text-light);font-style:italic;">(Google Sheets)</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  });
+}
+
+function renderHistory(){
+  const hc=document.getElementById('historyContent');
+  const ls=layLichSu();
+  if(ls.length===0){hc.innerHTML='<p class="empty">Chưa có lịch sử nào!</p>';return;}
+  hc.innerHTML=ls.map(x=>{const d=new Date(x.ngay);return`<div class="history-item"><div class="history-date">📅 ${d.toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div><div class="history-foods">${x.mon.map(m=>`<div>• ${m}</div>`).join('')}</div></div>`;}).join('');
+}
+
+taiDuLieuTuGoogleSheets().then(() => {
+  capNhatNgay();
+});
+</script>
+</body>
+</html>
